@@ -3,6 +3,11 @@
 *.lo
 *.o
 *.obj
+*.pyc
+*.iml
+*.class
+*.xml
+*.jar
 
 # Precompiled Headers
 *.gch
