@@ -1,0 +1,39 @@
+import numpy as np
+import pandas as pd
+
+def train_test_split(ratings):
+    test = np.zeros(ratings.shape)
+    train = ratings.copy()
+    for user in range(ratings.shape[0]):
+        test_ratings = np.random.choice(ratings[user, :].nonzero()[0],
+                                        size=10,
+                                        replace=False)
+        train[user, test_ratings] = 0.
+        test[user, test_ratings] = ratings[user, test_ratings]
+
+    # Test and training are truly disjoint
+    assert (np.all((train * test) == 0))
+    return train, test
+
+def fast_similarity(ratings, kind='user', epsilon=1e-9):
+    # epsilon -> small number for handling dived-by-zero errors
+    if kind == 'user':
+        sim = ratings.dot(ratings.T) + epsilon
+    elif kind == 'item':
+        sim = ratings.T.dot(ratings) + epsilon
+    norms = np.array([np.sqrt(np.diagonal(sim))])
+    return (sim / norms / norms.T)
+
+names = ['user_id', 'item_id', 'rating', 'timestamp']
+df = pd.read_csv('ml-100k/u.data', sep='\t', names=names)
+
+n_users = df.user_id.unique().shape[0]
+n_items = df.item_id.unique().shape[0]
+ratings = np.zeros((n_users, n_items))
+
+for row in df.itertuples():
+    ratings[row[1] - 1, row[2] - 1] = row[3]
+
+train, test = train_test_split(ratings)
+print(fast_similarity(ratings, 'user'))
+# sparsity = float(len(ratings.nonzero()[1]))

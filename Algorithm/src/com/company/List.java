@@ -1,5 +1,7 @@
 package com.company;
 
+import edu.princeton.cs.algs4.StdOut;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -142,6 +144,7 @@ public class List<Item> implements Iterable<Item>
         }
         prev.next = null;
         last = prev;
+        N--;
         return item;
     }
 
@@ -202,9 +205,9 @@ public class List<Item> implements Iterable<Item>
         }
     }
 
-    public void removeAll(String key)
+    public void remove(String key)
     {
-        Node curr = first, prev = null;
+        Node curr = first;
 
         while (curr != null)
         {
@@ -212,14 +215,143 @@ public class List<Item> implements Iterable<Item>
             {
                 if (curr == first)
                     removeFirst();
-                else if (curr == last)
-                    removeLastItem();
                 else
-                    prev.next = curr.next;
-                N--;
-                prev = curr;
+                {
+                    curr = curr.next;
+                    if (curr.next == null)
+                        last = curr;
+                    if (curr == null)
+                        last = null;
+                    N--;
+                }
                 curr = curr.next;
             }
         }
+    }
+
+    public Item max(Node first)
+    {
+        if (first == null)
+            return null;
+        Node curr = first;
+        Item max = curr.item;
+        while (curr.next != null)
+        {
+            if (((Comparable) max).compareTo(curr.item) < 0)
+                max = curr.item;
+            curr = curr.next;
+        }
+        return max;
+    }
+
+    public Item maxRec(Node curr, Item max)
+    {
+        if (curr == null)
+            return max;
+        else
+        {
+            if (((Comparable) max).compareTo(curr.item) < 0)
+                max = curr.item;
+            return maxRec(curr.next, max);
+        }
+    }
+
+    public Node reverse(Node first)
+    {
+        Node reverse = null, second;
+        while (first != null)
+        {
+            second = first.next;
+            first.next = reverse;
+            reverse = first;
+            first = second;
+        }
+        return reverse;
+    }
+
+    public Node reverseRec(Node first)
+    {
+        if (first == null)
+            return null;
+        if (first.next == null)
+            return first;
+        Node second = first.next;
+        Node rest = reverseRec(second);
+        second.next = first;
+        first.next = null;
+        return rest;
+    }
+
+    public static void showList(List list)
+    {
+        StdOut.println(list);
+        if (!list.isEmpty())
+            StdOut.printf("Size: %d, first: %s, last: %s\n", list.size(), list.first(), list.last());
+        else
+            StdOut.printf("Size: %d\n", list.size());
+    }
+
+    private static void testBaseMethods()
+    {
+        int[] a = { 2, 4, 6, 8, 10, 12 };
+
+        List<Integer> lst = new List<Integer>();
+        for (int i = 0; i < a.length; i++)
+            lst.append(a[i]);
+        showList(lst);
+
+        lst = new List<Integer>();
+        for (int i = 0; i < a.length; i++)
+            lst.prepend(a[i]);
+        showList(lst);
+
+        StdOut.println("removeFirst: " + lst.removeFirst());
+        showList(lst);
+    }
+
+    private static void testRemoveLast()
+    {
+        List<Integer> lst = new List<Integer>(new Integer[] { 6, 8, 10, 12 });
+        showList(lst);
+
+        while (!lst.isEmpty())
+        {
+            StdOut.println("removeLast: " + lst.removeLastItem());
+            showList(lst);
+        }
+    }
+
+    private static void testDelete()
+    {
+        List<Integer> lst = new List<Integer>(new Integer[] { 2, 4, 6, 8, 10, 12 });
+        showList(lst);
+
+        StdOut.printf("delete(%d): %s\n", 5, lst.deleteKthElem(5));
+        showList(lst);
+
+        StdOut.printf("delete(%d): %s\n", 1, lst.deleteKthElem(1));
+        showList(lst);
+
+        StdOut.printf("delete(%d): %s\n", 4, lst.deleteKthElem(4));
+        showList(lst);
+
+        StdOut.printf("delete(%d): %s\n", 8, lst.deleteKthElem(8));
+        showList(lst);
+
+        StdOut.printf("delete(%d): %s\n", 0, lst.deleteKthElem(0));
+        showList(lst);
+
+        while (!lst.isEmpty())
+        {
+            StdOut.printf("delete(%d): %s\n", 1, lst.deleteKthElem(1));
+            showList(lst);
+        }
+    }
+
+    public static void main(String[] args)
+    {
+        //testBaseMethods();
+        //testRemoveLast();
+        //testDelete();
     }
 }

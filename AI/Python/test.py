@@ -1,8 +1,10 @@
-frontier = [[[1, 2, 0], [3, 4, 5], [6, 7, 8]],
-[[1, 2, 5], [3, 4, 8], [6, 7, 0]],
-[[1, 2, 5], [3, 0, 4], [6, 7, 8]],
-[[1, 2, 5], [3, 4, 0], [6, 7, 8]],
-[[1, 0, 2], [3, 4, 5], [6, 7, 8]]]
+import numpy as np
+import random
+from ml_utils import *
 
-test = [[1, 0, 2], [3, 4, 5], [6, 7, 8]]
-print test not in frontier
+a = np.array([[1,2,3,4],[5,4,3,2]])
+b = np.array([1,6,3,4])
+
+w = np.matrix([1,2,3,4,5])
+w = w.T
+print(min(a))

@@ -411,7 +411,7 @@ public class List<Item> implements Iterable<Item>
     private static void testBaseMethods()
     {
         int[] a = { 2, 4, 6, 8, 10, 12 };
-        
+
         List<Integer> lst = new List<Integer>();
         for (int i = 0; i < a.length; i++)
             lst.append(a[i]);
